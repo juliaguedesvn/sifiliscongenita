@@ -56,4 +56,76 @@ SFC21	<- read.dbc(dbc_file21)
 SFC22	<- read.dbc(dbc_file22)
 SFC23	<- read.dbc(dbc_file23)
 
+#Juntar dfs
+SFCt <- rbind(SFC13,SFC14,SFC15,SFC16,SFC17,SFC18,
+              SFC19,SFC20,SFC21,SFC23)
+SFCrj <- SFCt |>
+  filter(SG_UF_NOT == 33)
 
+#Mudar o nome dos dados
+SFCrj |>
+  mutate(EVOLUCAO2 = case_when(
+    EVOLUCAO == 1 ~ "Cura",
+    EVOLUCAO == 2 ~ "Óbito",
+    EVOLUCAO == 3 ~ "Óbito",
+    EVOLUCAO == 9 ~ "Não disponível",
+    TRUE ~ "Não disponível")) |>
+  mutate(ESCOLMAE2 = case_when(
+    ESCOLMAE == 0 ~ "Analfabeto",
+    ESCOLMAE == 1 ~ "1ª a 4ª série incompleta do ef",
+    ESCOLMAE == 2 ~ "até 4ª série completa do ef",
+    ESCOLMAE == 3 ~ "5 a 8ª série incompleta do ef",
+    ESCOLMAE == 4 ~ "ensino fundamental completo",
+    ESCOLMAE == 5 ~ "ensino médio incompleto",
+    ESCOLMAE == 6 ~ "ensino médio completo",
+    ESCOLMAE == 7 ~ "educação superior incompleta",
+    ESCOLMAE == 8 ~ "educação superior completa",
+    ESCOLMAE == 9 ~ "Ignorado",
+    ESCOLMAE == 10 ~ " não se aplica",
+    TRUE ~ "Não disponível")) |>
+  mutate(ANT_RACA2 = case_when(
+    ANT_RACA == 4 ~ "Pardo",
+    ANT_RACA == 1 ~ "Branco",
+    ANT_RACA == 2 ~ "Preto",
+    ANT_RACA == 3 ~ "Amarelo",
+    ANT_RACA == 5 ~ "Indígena",
+    TRUE ~ "Não disponível")) |>
+  mutate(ANT_PRE_NA2 = case_when(
+    ANT_PRE_NA == 1 ~ "Sim",
+    ANT_PRE_NA == 2 ~ "Não",
+    ANT_PRE_NA == 9 ~ "Ignorado",
+    TRUE ~ "Não disponível")) |>
+  mutate(ANTSIFIL_N2 = case_when(
+    ANTSIFIL_N == 1 ~ "durante o pré-natal",
+    ANTSIFIL_N == 2 ~ "no momento do parto/curetagem",
+    ANTSIFIL_N == 3 ~ "após o parto",
+    ANTSIFIL_N == 4 ~ "não realizado",
+    ANTSIFIL_N == 9 ~ "Ignorado",
+    TRUE ~ "Não disponível")) |>
+  mutate(LAB_CONF2 = case_when(
+    LAB_CONF == 1 ~ "reagente",
+    LAB_CONF == 2 ~ "não reagente",
+    LAB_CONF == 3 ~ "não realizado",
+    LAB_CONF == 9 ~ "Ignorado",
+    TRUE ~ "Não disponível")) |>
+  mutate(TRA_ESQUEM2 = case_when(
+    TRA_ESQUEM == 1 ~ "adequado",
+    TRA_ESQUEM == 2 ~ "não adequado",
+    TRA_ESQUEM == 3 ~ "não realizado",
+    TRA_ESQUEM == 9 ~ "Ignorado",
+    TRUE ~ "Não disponível")) |>
+  mutate(LAB_PARTO2 = case_when(
+    LAB_PARTO == 1 ~ "reagente",
+    LAB_PARTO == 2 ~ "não reagente",
+    LAB_PARTO == 3 ~ "não realizado",
+    LAB_PARTO == 9 ~ "Ignorado",
+    TRUE ~ "Não disponível")) |>
+filter(!is.na(EVOLUCAO2)) |>
+  select(EVOLUCAO2, ESCOLMAE2, ANT_RACA2, LAB_CONF2, TRA_ESQUEM2, LAB_PARTO2)|>
+  tbl_summary(by = EVOLUCAO2, missing = "no")
+
+  
+ 
+  
+  
+  
